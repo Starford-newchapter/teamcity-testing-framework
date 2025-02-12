@@ -5,8 +5,8 @@ import io.restassured.specification.RequestSpecification;
 
 public class Request {
 
-    private final RequestSpecification specification;
-    private final Endpoint endpoint;
+    protected final RequestSpecification specification;
+    protected final Endpoint endpoint;
 
     public Request(RequestSpecification specification, Endpoint endpoint) {
         this.specification = specification;
