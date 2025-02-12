@@ -15,17 +15,8 @@ public class Specifications {
 
     private static Specifications specification;
 
-    private Specifications() {
-    }
 
-    public static Specifications getSpecification() {
-        if (specification == null) {
-            specification = new Specifications();
-        }
-        return specification;
-    }
-
-    private RequestSpecBuilder requestSpecBuilder() {
+    private static RequestSpecBuilder requestSpecBuilder() {
         RequestSpecBuilder requestSpecBuilder = new RequestSpecBuilder();
         requestSpecBuilder.setBaseUri("http://" + Config.getProperty("host"));
         requestSpecBuilder.setContentType(ContentType.JSON);
@@ -34,14 +25,25 @@ public class Specifications {
         return requestSpecBuilder;
     }
 
-    public RequestSpecification unauthorizedSpec() {
+
+    public static RequestSpecification adminAuthSpec() {
+        BasicAuthScheme basicAuthScheme = new BasicAuthScheme();
+        basicAuthScheme.setUserName(Config.getProperty("adminUserName"));
+        basicAuthScheme.setPassword(Config.getProperty("adminPassword"));
+        return requestSpecBuilder()
+                .setAuth(basicAuthScheme)
+                .build();
+
+    }
+
+    public static RequestSpecification unauthorizedSpec() {
         return requestSpecBuilder().build();
 
     }
 
-    public RequestSpecification authorizedSpec(User user) {
+    public static RequestSpecification authorizedSpec(User user) {
         BasicAuthScheme basicAuthScheme = new BasicAuthScheme();
-        basicAuthScheme.setUserName(user.getUser());
+        basicAuthScheme.setUserName(user.getUsername());
         basicAuthScheme.setPassword(user.getPassword());
 
         return requestSpecBuilder()
