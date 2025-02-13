@@ -1,6 +1,6 @@
 package com.example.teamcity.api;
 
-import com.example.teamcity.api.models.User;
+import com.example.teamcity.api.models.user.User;
 import com.example.teamcity.api.spec.Specifications;
 import io.restassured.RestAssured;
 import org.testng.annotations.Test;

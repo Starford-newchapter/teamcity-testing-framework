@@ -1,5 +1,6 @@
-package com.example.teamcity.api.models;
+package com.example.teamcity.api.models.user;
 
+import com.example.teamcity.api.models.BaseModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,5 +1,6 @@
-package com.example.teamcity.api.models;
+package com.example.teamcity.api.models.user;
 
+import com.example.teamcity.api.models.BaseModel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Role  extends  BaseModel{
+public class Role  extends BaseModel {
     @Builder.Default
     private  String roleId="SYSTEM_ADMIN";
     @Builder.Default

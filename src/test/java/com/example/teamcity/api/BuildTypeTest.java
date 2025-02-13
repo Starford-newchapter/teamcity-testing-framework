@@ -2,7 +2,7 @@ package com.example.teamcity.api;
 
 import com.example.teamcity.api.enums.Endpoint;
 import com.example.teamcity.api.generators.TestDataGenerator;
-import com.example.teamcity.api.models.User;
+import com.example.teamcity.api.models.user.User;
 import com.example.teamcity.api.models.build.BuildType;
 import com.example.teamcity.api.models.build.Project;
 import com.example.teamcity.api.requests.checked.CheckedBase;
