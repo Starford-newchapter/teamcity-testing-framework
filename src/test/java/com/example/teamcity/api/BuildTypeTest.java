@@ -6,7 +6,9 @@ import com.example.teamcity.api.models.build.BuildType;
 import com.example.teamcity.api.models.build.Project;
 import com.example.teamcity.api.models.user.User;
 import com.example.teamcity.api.requests.CheckedRequests;
+import com.example.teamcity.api.requests.unchecked.UncheckedBase;
 import com.example.teamcity.api.spec.Specifications;
+import org.apache.http.HttpStatus;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
@@ -36,11 +38,23 @@ public class BuildTypeTest extends BaseApiTest {
 
     @Test(description = "User should not be able to create two build types with the same id", groups = {"Negative", "CRUD"})
     public void userCreatesTwoBuildTypesWithTheSameIdTest() {
-        step("Create user");
-        step("Create project by user");
-        step("Create buildType1 for project by user");
-        step("Create buildType2 with same id as buildType1 for project by user");
-        step("Check buildType2 was not created with bad request code");
+        var user = TestDataGenerator.generate(User.class);
+
+        superUserCheckedRequest.getRequest(Endpoint.USERS).create(user);
+        var userCheckRequests = new CheckedRequests(Specifications.authorizedSpec(user));
+
+        var project = TestDataGenerator.generate(Project.class);
+
+        project = userCheckRequests.<Project>getRequest(Endpoint.PROJECTS).create(project);
+
+        var buildType1 = TestDataGenerator.generate(Arrays.asList(project), BuildType.class);
+        var buildType2 = TestDataGenerator.generate(Arrays.asList(project), BuildType.class, buildType1.getId());
+
+        userCheckRequests.getRequest(Endpoint.BUILD_TYPES).create(buildType1);
+        new UncheckedBase(Specifications.authorizedSpec(user), Endpoint.BUILD_TYPES)
+                .create(buildType2)
+                .then().assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST);
     }
 
     @Test(description = "Project admin should be able to create build type for their project", groups = {"Positive", "Roles"})
