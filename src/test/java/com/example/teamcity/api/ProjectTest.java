@@ -52,6 +52,7 @@ public class ProjectTest extends BaseApiTest {
         createProjectRequest.setId(null);
 
         var createProjectResponse = userCheckRequests.<Project>getRequest(PROJECTS).create(createProjectRequest);
+        validateCreateProjectResponse(createProjectRequest,createProjectResponse);
     }
 
     @Test(description = "User cannot to create project with exists name", groups = {"Negative", "CRUD"})
