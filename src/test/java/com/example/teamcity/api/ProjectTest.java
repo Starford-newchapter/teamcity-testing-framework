@@ -43,6 +43,16 @@ public class ProjectTest extends BaseApiTest {
         validateErrorResponse(createProjectResponse, ErrorMessage.EMPTY_PROJECT_NAME, HttpStatus.SC_BAD_REQUEST);
     }
 
+    @Test(description = "User should be able to create project without Id", groups = {"Positive", "CRUD"})
+    public void createProjectWithoutIdTest() {
+        superUserCheckedRequest.getRequest(USERS).create(testData.getUser());
+        var userCheckRequests = new CheckedRequests(Specifications.authorizedSpec(testData.getUser()));
+
+        var createProjectRequest = testData.getProject();
+        createProjectRequest.setId(null);
+
+        var createProjectResponse = userCheckRequests.<Project>getRequest(PROJECTS).create(createProjectRequest);
+    }
 
     @Test(description = "User cannot to create project with exists name", groups = {"Negative", "CRUD"})
     public void createProjectWithExistsNameTest() {
