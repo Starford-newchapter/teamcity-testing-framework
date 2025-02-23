@@ -51,8 +51,15 @@ public class BuildTypeTest extends BaseApiTest {
 
     @Test(description = "Project admin should be able to create build type for their project", groups = {"Positive", "Roles"})
     public void projectAdminCreatesBuildTypeTest() {
+
         step("Create user");
+        superUserCheckedRequest.getRequest(USERS).create(testData.getUser());
+        var userCheckRequests = new CheckedRequests(Specifications.authorizedSpec(testData.getUser()));
+
         step("Create project");
+
+        userCheckRequests.<Project>getRequest(PROJECTS).create(testData.getProject());
+
         step("Grant user PROJECT_ADMIN role in project");
 
         step("Create buildType for project by user (PROJECT_ADMIN)");
