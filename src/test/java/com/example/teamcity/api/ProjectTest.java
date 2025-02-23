@@ -37,7 +37,7 @@ public class ProjectTest extends BaseApiTest {
         var createProjectRequest = testData.getProject();
         createProjectRequest.setName(null);
 
-        var createProjectResponse = userUncheckedRequests.<Project>getRequest(PROJECTS).create(createProjectRequest);
+        var createProjectResponse = userUncheckedRequests.getRequest(PROJECTS).create(createProjectRequest);
         validateErrorResponse(createProjectResponse, ErrorMessage.PROJECT_NAME_CANNOT_BE_EMPTY.getMessage(), HttpStatus.SC_BAD_REQUEST);
     }
 
@@ -60,9 +60,9 @@ public class ProjectTest extends BaseApiTest {
 
         var createProjectRequest = testData.getProject();
 
-        userUncheckedRequests.<Project>getRequest(PROJECTS).create(createProjectRequest);
+        userUncheckedRequests.getRequest(PROJECTS).create(createProjectRequest);
 
-        var createProjectWithExistsNameResponse = userUncheckedRequests.<Project>getRequest(PROJECTS).create(createProjectRequest);
+        var createProjectWithExistsNameResponse = userUncheckedRequests.getRequest(PROJECTS).create(createProjectRequest);
         validateErrorResponse(createProjectWithExistsNameResponse, ErrorMessage.PROJECT_NAME_ALREADY_EXISTS.getMessage(), HttpStatus.SC_BAD_REQUEST);
     }
 
@@ -73,12 +73,12 @@ public class ProjectTest extends BaseApiTest {
 
         var createProjectRequest = testData.getProject();
 
-        userUncheckedRequests.<Project>getRequest(PROJECTS).create(createProjectRequest);
+        userUncheckedRequests.getRequest(PROJECTS).create(createProjectRequest);
 
         var createProjectWithExistsIdRequest = generate(Project.class);
         createProjectWithExistsIdRequest.setId(createProjectRequest.getId());
 
-        var createProjectWithExistsIdResponse = userUncheckedRequests.<Project>getRequest(PROJECTS).create(createProjectWithExistsIdRequest);
+        var createProjectWithExistsIdResponse = userUncheckedRequests.getRequest(PROJECTS).create(createProjectWithExistsIdRequest);
 
         var errorMessage = String.format(ErrorMessage.PROJECT_ID_ALREADY_USED.getMessage(), createProjectRequest.getId());
         validateErrorResponse(createProjectWithExistsIdResponse, errorMessage, HttpStatus.SC_BAD_REQUEST);
