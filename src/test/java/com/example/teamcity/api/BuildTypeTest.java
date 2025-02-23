@@ -15,7 +15,6 @@ import static com.example.teamcity.api.enums.Endpoint.BUILD_TYPES;
 import static com.example.teamcity.api.enums.Endpoint.PROJECTS;
 import static com.example.teamcity.api.enums.Endpoint.USERS;
 import static com.example.teamcity.api.generators.TestDataGenerator.generate;
-import static io.qameta.allure.Allure.step;
 
 @Test(groups = {"Regression"})
 public class BuildTypeTest extends BaseApiTest {
@@ -49,28 +48,15 @@ public class BuildTypeTest extends BaseApiTest {
                 .body(Matchers.containsString("The build configuration / template ID \"%s\" is already used by another configuration or template".formatted(testData.getBuildType().getId())));
     }
 
-    @Test(description = "Project admin should be able to create build type for their project", groups = {"Positive", "Roles"})
-    public void projectAdminCreatesBuildTypeTest() {
-        step("Create user");
-        step("Create project");
-        step("Grant user PROJECT_ADMIN role in project");
+    @Test(description = "User should  be able to create build with CommandLine step", groups = {"Positive", "CRUD"})
+    public void createBuildWithCommandLineStep() {
+        superUserCheckedRequest.getRequest(USERS).create(testData.getUser());
+        var userCheckRequests = new CheckedRequests(Specifications.authorizedSpec(testData.getUser()));
 
-        step("Create buildType for project by user (PROJECT_ADMIN)");
-        step("Check buildType was created successfully");
+        userCheckRequests.<Project>getRequest(PROJECTS).create(testData.getProject());
+
+        userCheckRequests.<Project>getRequest(BUILD_TYPES).create(testData.getBuildType());
     }
 
-    @Test(description = "Project admin should not be able to create build type for not their project", groups = {"Negative", "Roles"})
-    public void projectAdminCreatesBuildTypeForAnotherUserProjectTest() {
-        step("Create user1");
-        step("Create project1");
-        step("Grant user1 PROJECT_ADMIN role in project1");
-
-        step("Create user2");
-        step("Create project2");
-        step("Grant user2 PROJECT_ADMIN role in project2");
-
-        step("Create buildType for project1 by user2");
-        step("Check buildType was not created with forbidden code");
-    }
 }
 
