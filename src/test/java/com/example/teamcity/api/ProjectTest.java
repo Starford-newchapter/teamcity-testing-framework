@@ -9,8 +9,6 @@ import org.apache.http.HttpStatus;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-
 import static com.example.teamcity.api.enums.Endpoint.PROJECTS;
 import static com.example.teamcity.api.enums.Endpoint.USERS;
 import static com.example.teamcity.api.generators.TestDataGenerator.generate;
@@ -40,7 +38,7 @@ public class ProjectTest extends BaseApiTest {
         createProjectRequest.setName(null);
 
         var createProjectResponse = userUncheckedRequests.<Project>getRequest(PROJECTS).create(createProjectRequest);
-        validateErrorResponse(createProjectResponse, ErrorMessage.EMPTY_PROJECT_NAME, HttpStatus.SC_BAD_REQUEST);
+        validateErrorResponse(createProjectResponse, ErrorMessage.PROJECT_NAME_CANNOT_BE_EMPTY.getMessage(), HttpStatus.SC_BAD_REQUEST);
     }
 
     @Test(description = "User should be able to create project without Id", groups = {"Positive", "CRUD"})
@@ -52,7 +50,7 @@ public class ProjectTest extends BaseApiTest {
         createProjectRequest.setId(null);
 
         var createProjectResponse = userCheckRequests.<Project>getRequest(PROJECTS).create(createProjectRequest);
-        validateCreateProjectResponse(createProjectRequest,createProjectResponse);
+        validateCreateProjectResponse(createProjectRequest, createProjectResponse);
     }
 
     @Test(description = "User cannot to create project with exists name", groups = {"Negative", "CRUD"})
@@ -65,14 +63,11 @@ public class ProjectTest extends BaseApiTest {
         userUncheckedRequests.<Project>getRequest(PROJECTS).create(createProjectRequest);
 
         var createProjectWithExistsNameResponse = userUncheckedRequests.<Project>getRequest(PROJECTS).create(createProjectRequest);
-        validateErrorResponse(createProjectWithExistsNameResponse, ErrorMessage.PROJECT_NAME_EXISTS, HttpStatus.SC_BAD_REQUEST);
+        validateErrorResponse(createProjectWithExistsNameResponse, ErrorMessage.PROJECT_NAME_ALREADY_EXISTS.getMessage(), HttpStatus.SC_BAD_REQUEST);
     }
 
     @Test(description = "User cannot to create project with exists id", groups = {"Negative", "CRUD"})
     public void createProjectWithExistsIdTest() {
-        var projectWithSameId = generate(Arrays.asList(testData.getProject()), Project.class, testData.getBuildType().getId());
-
-
         superUserUnCheckedRequest.getRequest(USERS).create(testData.getUser());
         var userUncheckedRequests = new UncheckedRequests(Specifications.authorizedSpec(testData.getUser()));
 
@@ -84,7 +79,9 @@ public class ProjectTest extends BaseApiTest {
         createProjectWithExistsIdRequest.setId(createProjectRequest.getId());
 
         var createProjectWithExistsIdResponse = userUncheckedRequests.<Project>getRequest(PROJECTS).create(createProjectWithExistsIdRequest);
-        validateErrorResponse(createProjectWithExistsIdResponse, ErrorMessage.PROJECT_ID_EXISTS, HttpStatus.SC_BAD_REQUEST);
+
+        var errorMessage = String.format(ErrorMessage.PROJECT_ID_ALREADY_USED.getMessage(), createProjectRequest.getId());
+        validateErrorResponse(createProjectWithExistsIdResponse, errorMessage, HttpStatus.SC_BAD_REQUEST);
     }
 
     @DataProvider(name = "copyAllAssociatedSettings")

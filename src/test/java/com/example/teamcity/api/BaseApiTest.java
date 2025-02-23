@@ -1,7 +1,6 @@
 package com.example.teamcity.api;
 
 
-import com.example.teamcity.api.enums.ErrorMessage;
 import com.example.teamcity.api.models.build.Project;
 import io.restassured.response.Response;
 
@@ -16,9 +15,9 @@ public class BaseApiTest extends BaseTest {
         softAssert.assertEquals(createProjectRequest.getName(), createProjectResponse.getName());
     }
 
-    protected void validateErrorResponse(Response response, ErrorMessage errorMessage, int httpStatus) {
+    protected void validateErrorResponse(Response response, String errorMessage, int httpStatus) {
         softAssert.assertEquals(response.getStatusCode(), httpStatus);
-        softAssert.assertTrue(response.asString().contains(errorMessage.getMessage()));
+        softAssert.assertTrue(response.asString().contains(errorMessage));
     }
 
 
