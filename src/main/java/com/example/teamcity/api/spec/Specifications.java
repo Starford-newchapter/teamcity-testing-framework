@@ -25,15 +25,10 @@ public class Specifications {
         return requestSpecBuilder;
     }
 
-
-    public static RequestSpecification adminAuthSpec() {
-        BasicAuthScheme basicAuthScheme = new BasicAuthScheme();
-        basicAuthScheme.setUserName(Config.getProperty("adminUserName"));
-        basicAuthScheme.setPassword(Config.getProperty("adminPassword"));
-        return requestSpecBuilder()
-                .setAuth(basicAuthScheme)
-                .build();
-
+    public static RequestSpecification superUserAuthSpec() {
+        var requestBuilder = requestSpecBuilder();
+        requestBuilder.setBaseUri("http://%s:%s@%s/httpAuth".formatted("", Config.getProperty("superUserToken"), Config.getProperty("host")));
+        return requestBuilder.build();
     }
 
     public static RequestSpecification unauthorizedSpec() {
