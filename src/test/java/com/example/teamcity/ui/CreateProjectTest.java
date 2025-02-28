@@ -1,16 +1,19 @@
 package com.example.teamcity.ui;
 
+import com.example.teamcity.ui.pages.admin.CreateProjectPage;
 import org.testng.annotations.Test;
 
 import static io.qameta.allure.Allure.step;
 
 public class CreateProjectTest extends BaseUiTest {
+    private static final String GIT_URL = "https://github.com/Starford-newchapter/AVK_Double_2.git";
+
 
     @Test(description = "User should be able to create project", groups = {"Regression"})
     public void userCreatesProject() {
         //подготовка окружения
         step("Login as User");
-
+        loginAs(testData.getUser());
 
         //Взаимодействие с UI
         step("Open 'Create Project Page'");
@@ -18,6 +21,10 @@ public class CreateProjectTest extends BaseUiTest {
         step(("Click Proceed"));
         step("Fix Project name and Build Type name values");
         step(("Click Proceed"));
+
+        CreateProjectPage.open("_Root")
+                .createForm(GIT_URL)
+                .setUpProject(testData.getProject().getName(), testData.getBuildType().getName());
 
         // проверка состояния API
         //корректность отправки данных с UI на API
