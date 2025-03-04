@@ -1,5 +1,9 @@
 package com.example.teamcity.ui;
 
+import com.codeborne.selenide.Condition;
+import com.example.teamcity.api.enums.Endpoint;
+import com.example.teamcity.api.models.build.Project;
+import com.example.teamcity.ui.pages.ProjectPage;
 import com.example.teamcity.ui.pages.admin.CreateProjectPage;
 import org.testng.annotations.Test;
 
@@ -12,27 +16,22 @@ public class CreateProjectTest extends BaseUiTest {
     @Test(description = "User should be able to create project", groups = {"Regression"})
     public void userCreatesProject() {
         //подготовка окружения
-        step("Login as User");
         loginAs(testData.getUser());
 
         //Взаимодействие с UI
-        step("Open 'Create Project Page'");
-        step("Sent all project parameters (project url)");
-        step(("Click Proceed"));
-        step("Fix Project name and Build Type name values");
-        step(("Click Proceed"));
-
         CreateProjectPage.open("_Root")
                 .createForm(GIT_URL)
                 .setUpProject(testData.getProject().getName(), testData.getBuildType().getName());
 
         // проверка состояния API
         //корректность отправки данных с UI на API
-        step("Check that all entities was created with correct Data on API level");
+        var createdProject = superUserCheckedRequest.<Project>getRequest(Endpoint.PROJECTS).read("name:" + testData.getProject().getName());
+        softAssert.assertNotNull(createdProject);
 
         //проверка состояния UI
         //корректность считывания данных и отображение данных на UI)
-        step("Check that project is visible on project page");
+        ProjectPage.open(createdProject.getId())
+                .title.shouldHave(Condition.exactText(testData.getProject().getName()));
 
     }
 

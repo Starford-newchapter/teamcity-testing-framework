@@ -1,4 +1,7 @@
 package com.example.teamcity.ui.pages;
 
-public  abstract class BasePage {
+import java.time.Duration;
+
+public abstract class BasePage {
+    protected static final Duration BASE_WAITING = Duration.ofSeconds(30);
 }
