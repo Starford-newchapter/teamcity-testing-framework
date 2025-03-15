@@ -11,8 +11,6 @@ import org.testng.annotations.Test;
 import static io.qameta.allure.Allure.step;
 
 public class CreateProjectTest extends BaseUiTest {
-    private static final String GIT_URL = "https://github.com/Starford-newchapter/AVK_Double_2.git";
-
 
     @Test(description = "User should be able to create project", groups = {"Regression"})
     public void userCreatesProject() {
