@@ -14,6 +14,8 @@ import java.util.Map;
 
 public class BaseUiTest extends BaseTest {
 
+    protected static final String GIT_URL = "https://github.com/Starford-newchapter/AVK_Double_2.git";
+
     @BeforeSuite(alwaysRun = true)
     public void setupUiTest() {
         Configuration.browser = Config.getProperty("browser");
