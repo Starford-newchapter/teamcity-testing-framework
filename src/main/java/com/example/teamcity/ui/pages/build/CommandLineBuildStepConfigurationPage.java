@@ -3,15 +3,16 @@ package com.example.teamcity.ui.pages.build;
 import com.codeborne.selenide.SelenideElement;
 
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.actions;
 
 public class CommandLineBuildStepConfigurationPage extends BuildStepConfigurationBasePage {
 
-    private final SelenideElement scriptContainer = $(".CodeMirror");
-    private final SelenideElement scriptInputArea = scriptContainer.$("textarea");
+    private final SelenideElement scriptInputField = $(".CodeMirror");
 
 
-    public CommandLineBuildStepConfigurationPage inputScript(String script) {
-        scriptInputArea.setValue(script);
+    public CommandLineBuildStepConfigurationPage sendScript(String script) {
+        scriptInputField.click();
+        actions().sendKeys(script).perform();
         return this;
     }
 

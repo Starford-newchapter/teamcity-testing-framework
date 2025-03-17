@@ -1,7 +1,8 @@
-package com.example.teamcity.ui.pages;
+package com.example.teamcity.ui.pages.build;
 
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import com.example.teamcity.ui.pages.BasePage;
 import org.openqa.selenium.By;
 
 import static com.codeborne.selenide.Selenide.$;
