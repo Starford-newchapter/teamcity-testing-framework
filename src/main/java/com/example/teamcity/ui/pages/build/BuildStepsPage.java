@@ -11,7 +11,6 @@ import java.util.List;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
-import static com.codeborne.selenide.Selenide.page;
 
 public class BuildStepsPage extends BasePage {
 
@@ -28,8 +27,7 @@ public class BuildStepsPage extends BasePage {
         return Selenide.open(BUILD_STEPS_URL.formatted(buildTypeId), BuildStepsPage.class);
     }
 
-    public BuildPage runBuild() {
+    public void runBuild() {
         this.runBuildButton.click();
-        return page(BuildPage.class);
     }
 }

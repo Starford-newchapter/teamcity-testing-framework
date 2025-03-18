@@ -97,7 +97,7 @@ public class CreateBuildTest extends BaseUiTest {
     }
 
     @Test(description = "User should be able to run build with step", groups = {"Regression"})
-    public void userRunBuildWithStep() {
+    public void userRunBuildWithStep() throws InterruptedException {
         CommandLineBuildStepConfigurationPage commandLineBuildStepConfigurationPage = new CommandLineBuildStepConfigurationPage();
         BuildStepsPage buildStepsPage = new BuildStepsPage();
 
@@ -116,10 +116,6 @@ public class CreateBuildTest extends BaseUiTest {
                 .clickSaveButton();
 
         buildStepsPage.runBuild();
-
-        var createdBuild = superUserCheckedRequest.<BuildType>getRequest(BUILD_TYPES).read("name:" + testData.getBuildType().getName());
-
-
 
     }
 }
