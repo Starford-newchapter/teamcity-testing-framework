@@ -2,30 +2,30 @@ package com.example.teamcity.ui.pages.build;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import com.example.teamcity.ui.enums.RunnerType;
 import com.example.teamcity.ui.pages.BasePage;
-import org.openqa.selenium.By;
 
 import static com.codeborne.selenide.Selenide.$;
 
 public class BuildRunPage extends BasePage {
 
-    private final String XPATH_LOG_MESSAGE = "(//*[contains(text(),'%s')])[1]";
+    private final SelenideElement buildStepLogMessage = $("span[class*= 'LogMessageSearchHighlighting']");
 
 
     public final SelenideElement buildLogTab = $("span[data-tab-title='Build Log']");
+    private final SelenideElement searchLogButton = $("button[data-hint-container-id='buildlog-search-button']");
+    private final SelenideElement searchLogInput = $("input[class*='BuildLogSearch__input']");
+    private final SelenideElement submitSearchButton = $("button[type='submit']");
 
 
-    public BuildRunPage openLogMessage(RunnerType runnerType) {
-        $(By.xpath(String.format(XPATH_LOG_MESSAGE, runnerType.getType()))).click();
+    public BuildRunPage checkLogMessage(String logMessage) {
+        buildStepLogMessage.shouldHave(Condition.exactText(logMessage));
         return this;
     }
 
-    public BuildRunPage checkBuildLog(String message) {
-
-        $(By.xpath(String.format(XPATH_LOG_MESSAGE, message))).
-                should(Condition.appear, BASE_WAITING).
-                shouldHave(Condition.exactText(message));
+    public BuildRunPage searchLog(String logMessage) {
+        searchLogButton.click();
+        searchLogInput.val(logMessage);
+        submitSearchButton.click();
         return this;
     }
 

@@ -1,5 +1,6 @@
 package com.example.teamcity.ui.pages.build;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
@@ -17,6 +18,7 @@ public class BuildStepsPage extends BasePage {
     private static final String BUILD_STEPS_URL = "/admin/editBuildRunners.html?id=buildType:%s";
     private final ElementsCollection buildSteps = $$(By.className("editBuildStepRow"));
     private final SelenideElement runBuildButton = $("span[class*='btn-group_run']");
+    private final SelenideElement title = $(By.className("noBorder"));
 
     public List<BuildStepElement> getBuildStepElements() {
         return generatePageElements(buildSteps, BuildStepElement::new);
@@ -28,6 +30,7 @@ public class BuildStepsPage extends BasePage {
     }
 
     public void runBuild() {
+        title.should(Condition.appear, BASE_WAITING);
         this.runBuildButton.click();
     }
 }

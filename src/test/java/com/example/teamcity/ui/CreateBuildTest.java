@@ -127,7 +127,7 @@ public class CreateBuildTest extends BaseUiTest {
                 .click();
 
         buildRunPage
-                .openLogMessage(RunnerType.COMMAND_LINE)
-                .checkBuildLog("Hello World!");
+                .searchLog("Hello World!")
+                .checkLogMessage("Hello World!");
     }
 }
