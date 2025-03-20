@@ -8,6 +8,8 @@ import com.example.teamcity.ui.enums.ErrorMessage;
 import com.example.teamcity.ui.enums.RunnerType;
 import com.example.teamcity.ui.pages.admin.CreateBuildPage;
 import com.example.teamcity.ui.pages.build.BuildConfigurationPage;
+import com.example.teamcity.ui.pages.build.BuildPage;
+import com.example.teamcity.ui.pages.build.BuildRunPage;
 import com.example.teamcity.ui.pages.build.BuildStepsPage;
 import com.example.teamcity.ui.pages.build.CommandLineBuildStepConfigurationPage;
 import com.example.teamcity.ui.pages.build.CreateBuildStepPage;
@@ -97,9 +99,10 @@ public class CreateBuildTest extends BaseUiTest {
     }
 
     @Test(description = "User should be able to run build with step", groups = {"Regression"})
-    public void userRunBuildWithStep() throws InterruptedException {
+    public void userRunBuildWithStep() {
         CommandLineBuildStepConfigurationPage commandLineBuildStepConfigurationPage = new CommandLineBuildStepConfigurationPage();
         BuildStepsPage buildStepsPage = new BuildStepsPage();
+        BuildRunPage buildRunPage = new BuildRunPage();
 
 
         //подготовка окружения
@@ -114,8 +117,17 @@ public class CreateBuildTest extends BaseUiTest {
         commandLineBuildStepConfigurationPage
                 .sendScript("echo 'Hello World!'")
                 .clickSaveButton();
-
         buildStepsPage.runBuild();
 
+        BuildPage.open(testData.getBuildType().getId())
+                .buildStatus.click();
+
+        buildRunPage
+                .buildLogTab
+                .click();
+
+        buildRunPage
+                .openLogMessage(RunnerType.COMMAND_LINE)
+                .checkBuildLog("Hello World!");
     }
 }
