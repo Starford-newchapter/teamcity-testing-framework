@@ -28,6 +28,7 @@ public class BuildStepsPage extends BasePage {
         return Selenide.open(BUILD_STEPS_URL.formatted(buildTypeId), BuildStepsPage.class);
     }
 
+
     public void runBuild() {
         title.should(Condition.appear, BASE_WAITING);
         this.runBuildButton.click();
