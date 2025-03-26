@@ -24,7 +24,6 @@ public class BuildStepsPage extends BasePage {
         return generatePageElements(buildSteps, BuildStepElement::new);
     }
 
-
     public static BuildStepsPage open(String buildTypeId) {
         return Selenide.open(BUILD_STEPS_URL.formatted(buildTypeId), BuildStepsPage.class);
     }
