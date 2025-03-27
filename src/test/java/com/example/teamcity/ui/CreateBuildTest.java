@@ -57,8 +57,11 @@ public class CreateBuildTest extends BaseUiTest {
                 .setUpBuildType("");
 
         //Проверяем сообщение об ошибке
-        softAssert.assertEquals(createBuildPage
-                .buildNameErrorMessage.text(), ErrorMessage.EMPTY_BUILD_NAME.getGetMessage());
+        softAssert.assertTrue(createBuildPage.buildNameErrorMessage.is(Condition.visible),
+                "Error message should be visible");
+        softAssert.assertEquals(createBuildPage.buildNameErrorMessage.getText(),
+                ErrorMessage.EMPTY_BUILD_NAME.getGetMessage(),
+                "Error message text should match expected");
 
     }
 
