@@ -1,5 +1,6 @@
 package com.example.teamcity.ui.pages.build;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 
@@ -12,6 +13,7 @@ public class CommandLineBuildStepConfigurationPage extends BuildStepConfiguratio
 
     @Step("Ввод скрипта {script}")
     public CommandLineBuildStepConfigurationPage sendScript(String script) {
+        scriptInputField.should(Condition.appear, BASE_WAITING);
         scriptInputField.click();
         actions().sendKeys(script).perform();
         return this;
