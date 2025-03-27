@@ -8,8 +8,6 @@ import com.example.teamcity.ui.enums.ErrorMessage;
 import com.example.teamcity.ui.enums.RunnerType;
 import com.example.teamcity.ui.pages.admin.CreateBuildPage;
 import com.example.teamcity.ui.pages.build.BuildConfigurationPage;
-import com.example.teamcity.ui.pages.build.BuildPage;
-import com.example.teamcity.ui.pages.build.BuildRunPage;
 import com.example.teamcity.ui.pages.build.BuildStepsPage;
 import com.example.teamcity.ui.pages.build.CommandLineBuildStepConfigurationPage;
 import com.example.teamcity.ui.pages.build.CreateBuildStepPage;
@@ -98,7 +96,7 @@ public class CreateBuildTest extends BaseUiTest {
         softAssert.assertTrue(foundBuildSteps);
     }
 
-    @Test(description = "User should be able to run build with step", groups = {"Regression"},enabled = false)
+   /* @Test(description = "User should be able to run build with step", groups = {"Regression"},enabled = false)
     public void userRunBuildWithStep() {
         CommandLineBuildStepConfigurationPage commandLineBuildStepConfigurationPage = new CommandLineBuildStepConfigurationPage();
         BuildStepsPage buildStepsPage = new BuildStepsPage();
@@ -129,5 +127,5 @@ public class CreateBuildTest extends BaseUiTest {
         buildRunPage
                 .searchLog("Hello World!")
                 .checkLogMessage("Hello World!");
-    }
+    }*/
 }
