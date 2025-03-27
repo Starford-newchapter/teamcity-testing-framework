@@ -6,6 +6,7 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import com.example.teamcity.ui.elements.BuildStepElement;
 import com.example.teamcity.ui.pages.BasePage;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 
 import java.util.List;
@@ -20,15 +21,17 @@ public class BuildStepsPage extends BasePage {
     private final SelenideElement runBuildButton = $("span[class*='btn-group_run']");
     private final SelenideElement title = $(By.className("noBorder"));
 
+    @Step("Получение вскех шагов билда")
     public List<BuildStepElement> getBuildStepElements() {
         return generatePageElements(buildSteps, BuildStepElement::new);
     }
 
+    @Step("Открытие страницы настроек шагов билда c id={buildTypeId}")
     public static BuildStepsPage open(String buildTypeId) {
         return Selenide.open(BUILD_STEPS_URL.formatted(buildTypeId), BuildStepsPage.class);
     }
 
-
+    @Step("Нажать на кнопку Run Build")
     public void runBuild() {
         title.should(Condition.appear, BASE_WAITING);
         this.runBuildButton.click();
