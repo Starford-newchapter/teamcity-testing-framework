@@ -8,8 +8,7 @@ import static com.codeborne.selenide.Selenide.actions;
 
 public class CommandLineBuildStepConfigurationPage extends BuildStepConfigurationBasePage {
 
-    private final SelenideElement scriptInputField = $(".CodeMirror");
-
+    private final SelenideElement scriptInputField = $(".CodeMirror-lines");
 
     @Step("Ввод скрипта {script}")
     public CommandLineBuildStepConfigurationPage sendScript(String script) {
