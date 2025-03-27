@@ -13,8 +13,9 @@ public class CommandLineBuildStepConfigurationPage extends BuildStepConfiguratio
 
     @Step("Ввод скрипта {script}")
     public CommandLineBuildStepConfigurationPage sendScript(String script) {
-        scriptInputField.should(Condition.appear, BASE_WAITING);
-        scriptInputField.click();
+        scriptInputField
+                .should(Condition.appear, BASE_WAITING)
+                .click();
         actions().sendKeys(script).perform();
         return this;
     }
