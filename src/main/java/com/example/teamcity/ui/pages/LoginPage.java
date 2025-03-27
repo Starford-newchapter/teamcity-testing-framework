@@ -20,11 +20,11 @@ public class LoginPage extends BasePage {
     }
 
     @Step("Авторизация под юзером {user.username}")
-    public ProjectPage login(User user) {
+    public ProjectsPage login(User user) {
         //Метод val() внутри содержит clear и sendKeys
         inputUsername.val(user.getUsername());
         inputPassword.val(user.getPassword());
         inputSubmitLogin.click();
-        return page(ProjectPage.class);
+        return page(ProjectsPage.class);
     }
 }
