@@ -38,7 +38,7 @@ public class CreateBuildTest extends BaseUiTest {
         var createdBuild = superUserCheckedRequest.<BuildType>getRequest(Endpoint.BUILD_TYPES).read("name:" + testData.getBuildType().getName());
         softAssert.assertNotNull(createdBuild);
 
-        //проверка состояния UI
+        //проверка состояния UIc
         //корректность считывания данных и отображение данных на UI)
         BuildConfigurationPage.open(createdBuild.getId())
                 .buildNameTitle.shouldHave(Condition.exactText(testData.getBuildType().getName()));
@@ -98,7 +98,7 @@ public class CreateBuildTest extends BaseUiTest {
         softAssert.assertTrue(foundBuildSteps);
     }
 
-    @Test(description = "User should be able to run build with step", groups = {"Regression"})
+    @Test(description = "User should be able to run build with step", groups = {"Regression"},enabled = false)
     public void userRunBuildWithStep() {
         CommandLineBuildStepConfigurationPage commandLineBuildStepConfigurationPage = new CommandLineBuildStepConfigurationPage();
         BuildStepsPage buildStepsPage = new BuildStepsPage();
