@@ -14,9 +14,8 @@ public abstract class BuildStepConfigurationBasePage extends BasePage {
     protected SelenideElement saveButton = $(By.name("submitButton"));
 
     @Step("Нажать на кнопку Save")
-    protected BuildStepConfigurationBasePage clickSaveButton() {
+    protected void clickSaveButton() {
         saveButton.click();
-        return this;
     }
 
 

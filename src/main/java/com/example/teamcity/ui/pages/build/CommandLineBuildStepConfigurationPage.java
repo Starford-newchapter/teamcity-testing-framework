@@ -21,8 +21,7 @@ public class CommandLineBuildStepConfigurationPage extends BuildStepConfiguratio
     }
 
     @Override
-    public CommandLineBuildStepConfigurationPage clickSaveButton() {
+    public void clickSaveButton() {
         super.clickSaveButton();
-        return this;
     }
 }
