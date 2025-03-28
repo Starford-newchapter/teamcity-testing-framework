@@ -51,17 +51,9 @@ public class CreateBuildTest extends BaseUiTest {
         loginAs(testData.getUser());
 
         //Взаимодействие с UI
-        CreateBuildPage createBuildPage = CreateBuildPage.open(testData.getProject().getId());
-        createBuildPage
-                .createForm(GIT_URL)
-                .setUpBuildType("");
-
-        //Проверяем сообщение об ошибке
-        softAssert.assertTrue(createBuildPage.buildNameErrorMessage.is(Condition.visible),
-                "Error message should be visible");
-        softAssert.assertEquals(createBuildPage.buildNameErrorMessage.getText(),
-                ErrorMessage.EMPTY_BUILD_NAME.getGetMessage(),
-                "Error message text should match expected");
+        CreateBuildPage.open(testData.getProject().getId())
+                .createForm("")
+                .urlErrorMessage.shouldHave(Condition.exactText(ErrorMessage.EMPTY_REPOSITORY_URL.getGetMessage()));
 
     }
 
