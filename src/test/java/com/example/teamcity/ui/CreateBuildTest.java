@@ -56,10 +56,8 @@ public class CreateBuildTest extends BaseUiTest {
                 .createForm(GIT_URL)
                 .setUpBuildType("");
 
-        createBuildPage
-                .buildNameErrorMessage
-                .shouldHave(Condition.exactText(ErrorMessage.EMPTY_BUILD_NAME.getGetMessage()));
-        softAssert.assertTrue(createBuildPage.buildNameErrorMessage.isDisplayed());
+        softAssert.assertEquals(createBuildPage
+                .buildNameErrorMessage.text(), ErrorMessage.EMPTY_BUILD_NAME.getGetMessage());
 
 
     }
