@@ -5,6 +5,8 @@ import com.example.teamcity.api.enums.Endpoint;
 import com.example.teamcity.api.models.build.BuildType;
 import com.example.teamcity.api.models.build.Project;
 import com.example.teamcity.api.models.build.Property;
+import com.example.teamcity.api.models.build.Step;
+import com.example.teamcity.api.models.build.Steps;
 import com.example.teamcity.ui.enums.ErrorMessage;
 import com.example.teamcity.ui.pages.admin.CreateBuildPage;
 import com.example.teamcity.ui.pages.build.BuildConfigurationPage;
@@ -68,10 +70,16 @@ public class CreateBuildTest extends BaseUiTest {
 
         //подготовка окружения
         superUserCheckedRequest.<Project>getRequest(PROJECTS).create(testData.getProject());
-        testData.getBuildType().getSteps().getStep().get(0).setProperties((new ArrayList<>(Arrays.asList(
+        testData.getBuildType().setSteps(Steps.builder()
+                .step(new ArrayList<>(Arrays.asList(
+                        Step.builder().build()
+                )))
+                .build());
+
+        testData.getBuildType().getSteps().getStep().get(0).setProperties(new ArrayList<>(Arrays.asList(
                 new Property("script.content", "echo 'Hello World!'"),
                 new Property("teamcity.step.mode", "default"),
-                new Property("use.custom.script", "true")))));
+                new Property("use.custom.script", "true"))));
 
         superUserCheckedRequest.getRequest(BUILD_TYPES).create(testData.getBuildType());
 
