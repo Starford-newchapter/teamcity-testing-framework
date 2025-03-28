@@ -4,7 +4,6 @@ import com.codeborne.selenide.Condition;
 import com.example.teamcity.api.enums.Endpoint;
 import com.example.teamcity.api.models.build.BuildType;
 import com.example.teamcity.api.models.build.Project;
-import com.example.teamcity.api.models.build.Properties;
 import com.example.teamcity.api.models.build.Property;
 import com.example.teamcity.ui.enums.ErrorMessage;
 import com.example.teamcity.ui.pages.admin.CreateBuildPage;
@@ -63,17 +62,16 @@ public class CreateBuildTest extends BaseUiTest {
 
     }
 
- //TODO
+    //TODO
     @Test(description = "User should be able to create build step", groups = {"Regression"})
     public void userCreatesBuildStep() {
 
         //подготовка окружения
         superUserCheckedRequest.<Project>getRequest(PROJECTS).create(testData.getProject());
-        testData.getBuildType().getSteps().getStep().get(0).setProperties(new Properties());
-        testData.getBuildType().getSteps().getStep().get(0).getProperties().setProperty(new ArrayList<>(Arrays.asList(
+        testData.getBuildType().getSteps().getStep().get(0).setProperties((new ArrayList<>(Arrays.asList(
                 new Property("script.content", "echo 'Hello World!'"),
                 new Property("teamcity.step.mode", "default"),
-                new Property("use.custom.script", "true"))));
+                new Property("use.custom.script", "true")))));
 
         superUserCheckedRequest.getRequest(BUILD_TYPES).create(testData.getBuildType());
 

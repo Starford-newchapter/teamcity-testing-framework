@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
 @Data
 @AllArgsConstructor
@@ -17,5 +19,5 @@ public class Step extends BaseModel {
     private String name;
     @Builder.Default
     private String type = "simpleRunner";
-    private Properties properties;
+    private List<Property> properties;
 }
