@@ -6,6 +6,7 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import com.example.teamcity.ui.elements.ProjectAndBuildElement;
 import com.example.teamcity.ui.elements.ProjectElement;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 
 import java.util.List;
@@ -31,18 +32,23 @@ public class ProjectsPage extends BasePage {
     // UI elements -> List<Object>
     // ElementCollection -> List<BasePageElement>
 
+    @Step("Открытие страницы проектов")
     public static ProjectsPage open() {
         return Selenide.open(PROJECTS_URL, ProjectsPage.class);
     }
 
+    @Step("Получение всех проектов")
     public List<ProjectElement> getProjects() {
         return generatePageElements(projectElements, ProjectElement::new);
     }
 
+    @Step("Получение всех проектов и билдов")
     private List<ProjectAndBuildElement> getProjectsAndBuilds() {
         return generatePageElements(projectsAndBuildsElements, ProjectAndBuildElement::new);
     }
 
+
+    @Step("Поиск и выбор проекта с названием {projectName}")
     public ProjectPage selectProject(String projectName) {
         searchProjectInput.val(projectName);
         getProjectsAndBuilds().stream()

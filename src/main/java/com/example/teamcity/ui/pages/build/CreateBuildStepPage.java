@@ -1,11 +1,13 @@
 package com.example.teamcity.ui.pages.build;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import com.example.teamcity.ui.elements.RunnerElement;
 import com.example.teamcity.ui.enums.RunnerType;
 import com.example.teamcity.ui.pages.BasePage;
+import io.qameta.allure.Step;
 
 import java.util.List;
 
@@ -18,15 +20,21 @@ public class CreateBuildStepPage extends BasePage {
     private final SelenideElement runnerTypesSearchInput = $("input[data-test='runner-item-filter']");
     private final ElementsCollection runnerElements = $$("div[class*='SelectBuildRunners__container']");
 
+    public CreateBuildStepPage() {
+        runnerTypesSearchInput.shouldBe(Condition.visible, BASE_WAITING);
+    }
 
+    @Step("Открытие страницы создания шага билда c id={buildTypeId}")
     public static CreateBuildStepPage open(String buildTypeId) {
         return Selenide.open(CREATE_BUILD_STEP_URL.formatted(buildTypeId), CreateBuildStepPage.class);
     }
 
+    @Step("Получение всех значений Runner")
     public List<RunnerElement> getRunnerElements() {
         return generatePageElements(runnerElements, RunnerElement::new);
     }
 
+    @Step("Выбор  runnerType {runnerType.type}")
     public void selectRunnerType(RunnerType runnerType) {
         runnerTypesSearchInput.val(runnerType.getType());
         getRunnerElements().stream()

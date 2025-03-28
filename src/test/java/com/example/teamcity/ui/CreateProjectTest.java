@@ -39,26 +39,4 @@ public class CreateProjectTest extends BaseUiTest {
         softAssert.assertTrue(foundProjects);
 
     }
-
-    @Test(description = "User should not be able to craete project without name", groups = {"Negative"})
-    public void userCreatesProjectWithoutName() {
-        // подготовка окружения
-        step("Login as user");
-        step("Check number of projects");
-
-        // взаимодействие с UI
-        step("Open `Create Project Page` (http://localhost:8111/admin/createObjectMenu.html)");
-        step("Send all project parameters (repository URL)");
-        step("Click `Proceed`");
-        step("Set Project Name");
-        step("Click `Proceed`");
-
-        // проверка состояния API
-        // (корректность отправки данных с UI на API)
-        step("Check that number of projects did not change");
-
-        // проверка состояния UI
-        // (корректность считывания данных и отображение данных на UI)
-        step("Check that error appears `Project name must not be empty`");
-    }
 }
