@@ -1,5 +1,6 @@
 package com.example.teamcity.ui.pages.build;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
@@ -18,6 +19,10 @@ public class CreateBuildStepPage extends BasePage {
     private static final String CREATE_BUILD_STEP_URL = "/admin/editRunType.html?id=buildType:%s";
     private final SelenideElement runnerTypesSearchInput = $("input[data-test='runner-item-filter']");
     private final ElementsCollection runnerElements = $$("div[class*='SelectBuildRunners__container']");
+
+    public CreateBuildStepPage() {
+        runnerTypesSearchInput.shouldBe(Condition.visible, BASE_WAITING);
+    }
 
     @Step("Открытие страницы создания шага билда c id={buildTypeId}")
     public static CreateBuildStepPage open(String buildTypeId) {
