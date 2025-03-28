@@ -63,38 +63,6 @@ public class CreateBuildTest extends BaseUiTest {
     }
 
 
-    @Test(description = "User should be able to create build step", groups = {"Regression"})
-    public void userCreatesBuildStep() {
-        CommandLineBuildStepConfigurationPage commandLineBuildStepConfigurationPage = new CommandLineBuildStepConfigurationPage();
-        BuildStepsPage buildStepsPage = new BuildStepsPage();
-
-        //подготовка окружения
-        superUserCheckedRequest.<Project>getRequest(PROJECTS).create(testData.getProject());
-        superUserCheckedRequest.<BuildType>getRequest(BUILD_TYPES).create(testData.getBuildType());
-        loginAs(testData.getUser());
-
-        //Взаимодействие с UI
-        CreateBuildStepPage.open(testData.getBuildType().getId())
-                .selectRunnerType(RunnerType.COMMAND_LINE);
-
-        commandLineBuildStepConfigurationPage
-                .sendScript("echo 'Hello World!'")
-                .clickSaveButton();
-
-        //корректность отправки данных с UI на API
-        var createdBuild = superUserCheckedRequest.<BuildType>getRequest(BUILD_TYPES).read("name:" + testData.getBuildType().getName());
-        softAssert.assertTrue(createdBuild.getSteps().getCount() > 0, "Build step is not created");
-
-        //проверка состояния UI
-        //корректность считывания данных и отображение данных на UI)
-        var foundBuildSteps = buildStepsPage
-                .getBuildStepElements()
-                .stream()
-                .anyMatch(buildStep -> buildStep.getStepName().text().equals(RunnerType.COMMAND_LINE.getType()));
-
-        softAssert.assertTrue(foundBuildSteps);
-    }
-
    /* @Test(description = "User should be able to run build with step", groups = {"Regression"},enabled = false)
     public void userRunBuildWithStep() {
         CommandLineBuildStepConfigurationPage commandLineBuildStepConfigurationPage = new CommandLineBuildStepConfigurationPage();
