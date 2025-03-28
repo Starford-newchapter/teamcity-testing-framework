@@ -11,6 +11,7 @@ import com.example.teamcity.ui.pages.build.BuildConfigurationPage;
 import com.example.teamcity.ui.pages.build.BuildStepsPage;
 import com.example.teamcity.ui.pages.build.CommandLineBuildStepConfigurationPage;
 import com.example.teamcity.ui.pages.build.CreateBuildStepPage;
+import org.apache.http.HttpStatus;
 import org.testng.annotations.Test;
 
 import static com.example.teamcity.api.enums.Endpoint.BUILD_TYPES;
@@ -51,9 +52,19 @@ public class CreateBuildTest extends BaseUiTest {
         loginAs(testData.getUser());
 
         //Взаимодействие с UI
-        CreateBuildPage.open(testData.getProject().getId())
-                .createForm("")
-                .urlErrorMessage.shouldHave(Condition.exactText(ErrorMessage.EMPTY_REPOSITORY_URL.getGetMessage()));
+        CreateBuildPage createBuildPage = CreateBuildPage.open(testData.getProject().getId());
+        createBuildPage
+                .createForm(GIT_URL)
+                .setUpBuildType("");
+
+        createBuildPage
+                .buildNameErrorMessage
+                .shouldHave(Condition.exactText(ErrorMessage.EMPTY_BUILD_NAME.getGetMessage()));
+
+
+        var createdBuild = superUserUncheckedRequest.<BuildType>getRequest(Endpoint.BUILD_TYPES).read("name:" + testData.getBuildType().getName());
+        softAssert.assertEquals(createdBuild.getStatusCode(), HttpStatus.SC_NOT_FOUND);
+
 
     }
 
