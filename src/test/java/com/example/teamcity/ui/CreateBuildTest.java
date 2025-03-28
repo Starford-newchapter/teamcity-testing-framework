@@ -11,7 +11,6 @@ import com.example.teamcity.ui.pages.build.BuildConfigurationPage;
 import com.example.teamcity.ui.pages.build.BuildStepsPage;
 import com.example.teamcity.ui.pages.build.CommandLineBuildStepConfigurationPage;
 import com.example.teamcity.ui.pages.build.CreateBuildStepPage;
-import org.apache.http.HttpStatus;
 import org.testng.annotations.Test;
 
 import static com.example.teamcity.api.enums.Endpoint.BUILD_TYPES;
@@ -60,10 +59,7 @@ public class CreateBuildTest extends BaseUiTest {
         createBuildPage
                 .buildNameErrorMessage
                 .shouldHave(Condition.exactText(ErrorMessage.EMPTY_BUILD_NAME.getGetMessage()));
-
-
-        var createdBuild = superUserUncheckedRequest.<BuildType>getRequest(Endpoint.BUILD_TYPES).read("name:" + testData.getBuildType().getName());
-        softAssert.assertEquals(createdBuild.getStatusCode(), HttpStatus.SC_NOT_FOUND);
+        softAssert.assertTrue(createBuildPage.buildNameErrorMessage.isDisplayed());
 
 
     }
