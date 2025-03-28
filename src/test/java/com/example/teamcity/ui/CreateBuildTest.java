@@ -4,11 +4,17 @@ import com.codeborne.selenide.Condition;
 import com.example.teamcity.api.enums.Endpoint;
 import com.example.teamcity.api.models.build.BuildType;
 import com.example.teamcity.api.models.build.Project;
+import com.example.teamcity.api.models.build.Properties;
+import com.example.teamcity.api.models.build.Property;
 import com.example.teamcity.ui.enums.ErrorMessage;
 import com.example.teamcity.ui.pages.admin.CreateBuildPage;
 import com.example.teamcity.ui.pages.build.BuildConfigurationPage;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static com.example.teamcity.api.enums.Endpoint.BUILD_TYPES;
 import static com.example.teamcity.api.enums.Endpoint.PROJECTS;
 
 public class CreateBuildTest extends BaseUiTest {
@@ -40,10 +46,9 @@ public class CreateBuildTest extends BaseUiTest {
 
     @Test(description = "User cannot create a build without name", groups = {"Regression"})
     public void userCreatesBuildWithoutName() {
-
         //подготовка окружения
-        superUserCheckedRequest.<Project>getRequest(PROJECTS).create(testData.getProject());
         loginAs(testData.getUser());
+        superUserCheckedRequest.<Project>getRequest(PROJECTS).create(testData.getProject());
 
         //Взаимодействие с UI
         CreateBuildPage createBuildPage = CreateBuildPage.open(testData.getProject().getId());
@@ -51,46 +56,34 @@ public class CreateBuildTest extends BaseUiTest {
                 .createForm(GIT_URL)
                 .setUpBuildType("");
 
-        createBuildPage
-                .buildNameErrorMessage
-                .shouldHave(Condition.exactText(ErrorMessage.EMPTY_BUILD_NAME.getGetMessage()));
-        softAssert.assertTrue(createBuildPage.buildNameErrorMessage.isDisplayed());
+        softAssert.assertEquals(createBuildPage.buildNameErrorMessage.text()
+                , ErrorMessage.EMPTY_BUILD_NAME.getGetMessage()
+        );
 
 
     }
 
-
-    /*@Test(description = "User should be able to create build step", groups = {"Regression"})
+ //TODO
+    @Test(description = "User should be able to create build step", groups = {"Regression"})
     public void userCreatesBuildStep() {
-        CommandLineBuildStepConfigurationPage commandLineBuildStepConfigurationPage = new CommandLineBuildStepConfigurationPage();
-        BuildStepsPage buildStepsPage = new BuildStepsPage();
 
         //подготовка окружения
         superUserCheckedRequest.<Project>getRequest(PROJECTS).create(testData.getProject());
-        superUserCheckedRequest.<BuildType>getRequest(BUILD_TYPES).create(testData.getBuildType());
-        loginAs(testData.getUser());
+        testData.getBuildType().getSteps().getStep().get(0).setProperties(new Properties());
+        testData.getBuildType().getSteps().getStep().get(0).getProperties().setProperty(new ArrayList<>(Arrays.asList(
+                new Property("script.content", "echo 'Hello World!'"),
+                new Property("teamcity.step.mode", "default"),
+                new Property("use.custom.script", "true"))));
 
-        //Взаимодействие с UI
-        CreateBuildStepPage.open(testData.getBuildType().getId())
-                .selectRunnerType(RunnerType.COMMAND_LINE);
+        superUserCheckedRequest.getRequest(BUILD_TYPES).create(testData.getBuildType());
 
-        commandLineBuildStepConfigurationPage
-                .sendScript("echo 'Hello World!'")
-                .clickSaveButton();
+        //loginAs(testData.getUser());
 
         //корректность отправки данных с UI на API
         var createdBuild = superUserCheckedRequest.<BuildType>getRequest(BUILD_TYPES).read("name:" + testData.getBuildType().getName());
         softAssert.assertTrue(createdBuild.getSteps().getCount() > 0, "Build step is not created");
 
-        //проверка состояния UI
-        //корректность считывания данных и отображение данных на UI)
-        var foundBuildSteps = buildStepsPage
-                .getBuildStepElements()
-                .stream()
-                .anyMatch(buildStep -> buildStep.getStepName().text().equals(RunnerType.COMMAND_LINE.getType()));
-
-        softAssert.assertTrue(foundBuildSteps);
-    }*/
+    }
 
    /* @Test(description = "User should be able to run build with step", groups = {"Regression"},enabled = false)
     public void userRunBuildWithStep() {
