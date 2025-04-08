@@ -24,6 +24,8 @@
         <selenide.version>7.4.3</selenide.version>
         <allure.version>2.27.0</allure.version>
         <swagger-coverage-version>1.5.0</swagger-coverage-version>
+        <awaitility.version>4.3.0</awaitility.version>
+
 
     </properties>
 
@@ -90,6 +92,11 @@
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-rest-assured</artifactId>
             <version>${allure.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>${awaitility.version}</version>
         </dependency>
     </dependencies>
 

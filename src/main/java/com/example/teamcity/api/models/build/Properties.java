@@ -1,5 +1,6 @@
 package com.example.teamcity.api.models.build;
 
+import com.example.teamcity.api.annotations.Parameterizable;
 import com.example.teamcity.api.models.BaseModel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Steps extends BaseModel {
-    private List<Step> step;
+public class Properties extends BaseModel {
+    @Parameterizable
+    private List<Property> property;
+
 }
