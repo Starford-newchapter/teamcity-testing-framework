@@ -21,6 +21,18 @@ public class Specifications {
 
     private static Specifications specification;
 
+    private Specifications() {
+    }
+
+    ;
+
+    public static Specifications getSpec() {
+        if (specification == null) {
+            specification = new Specifications();
+        }
+        return specification;
+    }
+
 
     private static RequestSpecBuilder requestSpecBuilder() {
         RequestSpecBuilder requestSpecBuilder = new RequestSpecBuilder();
@@ -55,6 +67,12 @@ public class Specifications {
 
         return requestSpecBuilder()
                 .setAuth(basicAuthScheme)
+                .build();
+    }
+
+    public RequestSpecification mockSpec() {
+        return requestSpecBuilder()
+                .setBaseUri("http://localhost:8086")
                 .build();
     }
 
