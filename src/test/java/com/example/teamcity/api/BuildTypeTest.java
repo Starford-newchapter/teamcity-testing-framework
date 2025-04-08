@@ -1,20 +1,24 @@
 package com.example.teamcity.api;
 
+import com.example.teamcity.api.enums.Roles;
+import com.example.teamcity.api.enums.Scope;
 import com.example.teamcity.api.models.build.BuildType;
 import com.example.teamcity.api.models.build.Project;
+import com.example.teamcity.api.models.user.Role;
 import com.example.teamcity.api.requests.CheckedRequests;
+import com.example.teamcity.api.requests.UncheckedRequests;
 import com.example.teamcity.api.requests.unchecked.UncheckedBase;
 import com.example.teamcity.api.spec.Specifications;
-import org.apache.http.HttpStatus;
-import org.hamcrest.Matchers;
+import com.example.teamcity.api.spec.ValidationResponseSpecifications;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 import static com.example.teamcity.api.enums.Endpoint.BUILD_TYPES;
 import static com.example.teamcity.api.enums.Endpoint.PROJECTS;
 import static com.example.teamcity.api.enums.Endpoint.USERS;
 import static com.example.teamcity.api.generators.TestDataGenerator.generate;
+import static io.qameta.allure.Allure.step;
 
 @Test(groups = {"Regression"})
 public class BuildTypeTest extends BaseApiTest {
@@ -33,7 +37,7 @@ public class BuildTypeTest extends BaseApiTest {
 
     @Test(description = "User should not be able to create two build types with the same id", groups = {"Negative", "CRUD"})
     public void userCreatesTwoBuildTypesWithTheSameIdTest() {
-        var buildTypeWithSameId = generate(Arrays.asList(testData.getProject()), BuildType.class, testData.getBuildType().getId());
+        var buildTypeWithSameId = generate(Collections.singletonList(testData.getProject()), BuildType.class, testData.getBuildType().getId());
 
         superUserCheckedRequest.getRequest(USERS).create(testData.getUser());
 
@@ -42,11 +46,74 @@ public class BuildTypeTest extends BaseApiTest {
         userCheckRequests.<Project>getRequest(PROJECTS).create(testData.getProject());
 
         userCheckRequests.getRequest(BUILD_TYPES).create(testData.getBuildType());
+
         new UncheckedBase(Specifications.authorizedSpec(testData.getUser()), BUILD_TYPES)
                 .create(buildTypeWithSameId)
-                .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body(Matchers.containsString("The build configuration / template ID \"%s\" is already used by another configuration or template".formatted(testData.getBuildType().getId())));
+                .then().spec(ValidationResponseSpecifications
+                        .checkBuildTypeWithIdAlreadyExist(testData.getBuildType().getId()));
     }
 
-}
+    @Test(description = "Project admin should be able to create build type for their project", groups = {"Positive", "Roles"})
+    public void projectAdminCreatesBuildTypeTest() {
 
+
+        step("Create project", () -> {
+            superUserCheckedRequest.<Project>getRequest(PROJECTS).create(testData.getProject());
+        });
+
+
+        step("Create user with role PROJECT_ADMIN", () -> {
+            testData.getUser().getRoles().setRole(Collections.singletonList(Role.builder()
+                    .roleId(Roles.PROJECT_ADMIN.name())
+                    .scope(Scope.P.getValue() + ":" + testData.getProject().getId())
+                    .build()));
+            superUserCheckedRequest.getRequest(USERS).create(testData.getUser());
+        });
+
+        var userCheckRequests = new CheckedRequests(Specifications.authorizedSpec(testData.getUser()));
+
+        step("Create buildType for project by user  with role PROJECT_ADMIN", () -> {
+            userCheckRequests.getRequest(BUILD_TYPES).create(testData.getBuildType());
+        });
+
+        step("Check buildType was created successfully", () -> {
+            var createdBuildType = userCheckRequests.<BuildType>getRequest(BUILD_TYPES).read("id:" + testData.getBuildType().getId());
+            softAssert.assertEquals(createdBuildType.getName(), testData.getBuildType().getName(), "BuildType name is not correct");
+        });
+
+    }
+
+    @Test(description = "Project admin should not be able to create build type for not their project", groups = {"Negative", "Roles"})
+    public void projectAdminCreatesBuildTypeForAnotherUserProjectTest() {
+        var testData2 = generate();
+
+        step("Create user1 with role PROJECT_ADMIN in project1", () -> {
+            superUserCheckedRequest.<Project>getRequest(PROJECTS).create(testData.getProject());
+            testData.getUser().getRoles().setRole(Collections.singletonList(Role.builder()
+                    .roleId(Roles.PROJECT_ADMIN.name())
+                    .scope(Scope.P.getValue() + ":" + testData.getProject().getId())
+                    .build()));
+            superUserCheckedRequest.getRequest(USERS).create(testData.getUser());
+
+        });
+
+
+        step("Create user2 with role PROJECT_ADMIN in project2", () -> {
+            superUserCheckedRequest.getRequest(PROJECTS).create(testData2.getProject());
+            testData2.getUser().getRoles().setRole(Collections.singletonList(Role.builder()
+                    .roleId(Roles.PROJECT_ADMIN.name())
+                    .scope(Scope.P.getValue() + ":" + testData2.getProject().getId())
+                    .build()));
+            superUserCheckedRequest.getRequest(USERS).create(testData2.getUser());
+        });
+        new UncheckedRequests(Specifications.authorizedSpec(testData2.getUser()));
+
+
+        step("Create buildType for project1 by user2 and check that buildType was not created with forbidden code", () -> {
+            new UncheckedRequests(Specifications.authorizedSpec(testData2.getUser()))
+                    .getRequest(BUILD_TYPES).create(testData.getBuildType())
+                    .then().spec(ValidationResponseSpecifications
+                            .checkUserCannotCreateBuildWithOtherProject(testData.getProject().getId()));
+        });
+    }
+}
