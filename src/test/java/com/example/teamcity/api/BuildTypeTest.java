@@ -147,14 +147,14 @@ public class BuildTypeTest extends BaseApiTest {
                 generate(Property.class, "use.custom.script", "true"))));
 
         step("Create build with step CommandLine", () -> {
-            superUserCheckedRequest.getRequest(BUILD_TYPES).create(testData.getBuildType());
+            superUserCheckedRequest.getRequest(BUILD_TYPES).create(buildType);
         });
 
         var userCheckRequests = new CheckedBase<>(Specifications.authorizedSpec(testData.getUser()), BUILD_QUEUE);
 
 
         var createdBuildRun = (Build) userCheckRequests.create(Build.builder()
-                .buildType(testData.getBuildType())
+                .buildType(buildType)
                 .build());
 
         softAssert.assertEquals(createdBuildRun.getState(), BuildState.QUEUED.getState());

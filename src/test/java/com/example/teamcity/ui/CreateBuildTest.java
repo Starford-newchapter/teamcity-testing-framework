@@ -1,20 +1,25 @@
 package com.example.teamcity.ui;
 
 import com.codeborne.selenide.Condition;
-import com.example.teamcity.api.enums.Endpoint;
 import com.example.teamcity.api.models.build.BuildType;
 import com.example.teamcity.api.models.build.Project;
+import com.example.teamcity.api.models.build.Property;
+import com.example.teamcity.api.models.build.Steps;
 import com.example.teamcity.ui.enums.ErrorMessage;
-import com.example.teamcity.ui.enums.RunnerType;
 import com.example.teamcity.ui.pages.admin.CreateBuildPage;
 import com.example.teamcity.ui.pages.build.BuildConfigurationPage;
-import com.example.teamcity.ui.pages.build.BuildStepsPage;
-import com.example.teamcity.ui.pages.build.CommandLineBuildStepConfigurationPage;
-import com.example.teamcity.ui.pages.build.CreateBuildStepPage;
+import com.example.teamcity.ui.pages.build.BuildPage;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.testng.annotations.Test;
+
+import java.util.List;
+import java.util.Random;
 
 import static com.example.teamcity.api.enums.Endpoint.BUILD_TYPES;
 import static com.example.teamcity.api.enums.Endpoint.PROJECTS;
+import static com.example.teamcity.api.generators.TestDataGenerator.generate;
+import static io.qameta.allure.Allure.step;
 
 public class CreateBuildTest extends BaseUiTest {
 
@@ -61,36 +66,33 @@ public class CreateBuildTest extends BaseUiTest {
     }
 
 
-   /* @Test(description = "User should be able to run build with step", groups = {"Regression"},enabled = false)
+    @Test(description = "User should be able to run build with step", groups = {"Regression"})
     public void userRunBuildWithStep() {
-        CommandLineBuildStepConfigurationPage commandLineBuildStepConfigurationPage = new CommandLineBuildStepConfigurationPage();
-        BuildStepsPage buildStepsPage = new BuildStepsPage();
-        BuildRunPage buildRunPage = new BuildRunPage();
-
+        final String commandLineText = "'Hello World!'";
 
         //подготовка окружения
         superUserCheckedRequest.<Project>getRequest(PROJECTS).create(testData.getProject());
-        superUserCheckedRequest.<BuildType>getRequest(BUILD_TYPES).create(testData.getBuildType());
-        loginAs(testData.getUser());
+        var buildType = testData.getBuildType();
+        buildType.setSteps(generate(Steps.class, List.of(
+                generate(Property.class, "script.content", "echo " + commandLineText),
+                generate(Property.class, "use.custom.script", "true"))));
+        superUserCheckedRequest.getRequest(BUILD_TYPES).create(buildType);
 
         //Взаимодействие с UI
-        CreateBuildStepPage.open(testData.getBuildType().getId())
-                .selectRunnerType(RunnerType.COMMAND_LINE);
+        loginAs(testData.getUser());
 
-        commandLineBuildStepConfigurationPage
-                .sendScript("echo 'Hello World!'")
-                .clickSaveButton();
-        buildStepsPage.runBuild();
+        var buildLogs = BuildPage.open(buildType.getId())
+                .clickRunBuild()
+                .clickBuildElement(1)
+                .clickBuildLog()
+                .searchLog(commandLineText);
 
-        BuildPage.open(testData.getBuildType().getId())
-                .buildStatus.click();
+        step("Проверка наличия лога в билде", () -> {
+            buildLogs.filter(Condition.text(commandLineText))
+                    .forEach(element -> {
+                        softAssert.assertTrue(element.getText().contains(commandLineText));
+                    });
+        });
+    }
 
-        buildRunPage
-                .buildLogTab
-                .click();
-
-        buildRunPage
-                .searchLog("Hello World!")
-                .checkLogMessage("Hello World!");
-    }*/
 }

@@ -19,7 +19,11 @@ public class BuildStepsPage extends BasePage {
     private static final String BUILD_STEPS_URL = "/admin/editBuildRunners.html?id=buildType:%s";
     private final ElementsCollection buildSteps = $$(By.className("editBuildStepRow"));
     private final SelenideElement runBuildButton = $("span[class*='btn-group_run']");
-    private final SelenideElement title = $(By.className("noBorder"));
+    public final SelenideElement title = $(By.className("noBorder"));
+
+    public BuildStepsPage() {
+        title.should(Condition.appear, BASE_WAITING);
+    }
 
     @Step("Получение вскех шагов билда")
     public List<BuildStepElement> getBuildStepElements() {
@@ -31,9 +35,4 @@ public class BuildStepsPage extends BasePage {
         return Selenide.open(BUILD_STEPS_URL.formatted(buildTypeId), BuildStepsPage.class);
     }
 
-    @Step("Нажать на кнопку Run Build")
-    public void runBuild() {
-        title.should(Condition.appear, BASE_WAITING);
-        this.runBuildButton.click();
-    }
 }
