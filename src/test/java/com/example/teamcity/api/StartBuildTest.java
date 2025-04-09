@@ -30,7 +30,7 @@ public class StartBuildTest extends BaseApiTest {
     }
 
 
-    @Test(description = "User should be able to start build (with WireMock)", groups = {"Regression"})
+    @Test(description = "User should be able to start build (with WireMock)")
     public void userStartsBuildWithWireMockTest() {
         var checkedBuildQueueRequest = new CheckedBase<>(Specifications.getSpec()
                 .mockSpec(), BUILD_QUEUE);

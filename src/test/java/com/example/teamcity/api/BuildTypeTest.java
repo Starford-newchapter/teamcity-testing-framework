@@ -130,8 +130,8 @@ public class BuildTypeTest extends BaseApiTest {
         });
     }
 
-
-    @Test(description = "User should be able to run build  with step", groups = {"Positive", "CRUD"})
+  //TODO Включить когда настроится агент в пайпалйне
+    @Test(description = "User should be able to run build  with step",enabled = false, groups = {"Positive", "CRUD"})
     public void userCreatesAndRunBuildTypeWithStepTest() {
         step("Create project", () -> {
             superUserCheckedRequest.getRequest(USERS).create(testData.getUser());
