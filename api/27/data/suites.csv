@@ -1,4 +1,0 @@
-"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"passed","Fri Mar 28 13:15:29 GMT 2025","Fri Mar 28 13:15:30 GMT 2025","613","Surefire suite","Surefire test","com.example.teamcity.api.BuildTypeTest","com.example.teamcity.api.BuildTypeTest","userCreatesTwoBuildTypesWithTheSameIdTest","User should not be able to create two build types with the same id",""
-"passed","Fri Mar 28 13:14:18 GMT 2025","Fri Mar 28 13:15:10 GMT 2025","52058","Surefire suite","Surefire test","com.example.teamcity.ui.SetupServerTest","com.example.teamcity.ui.SetupServerTest","setupTeamCityServerTest","setupTeamCityServerTest",""
-"passed","Fri Mar 28 13:15:26 GMT 2025","Fri Mar 28 13:15:29 GMT 2025","2904","Surefire suite","Surefire test","com.example.teamcity.api.BuildTypeTest","com.example.teamcity.api.BuildTypeTest","userCreatesBuildTypeTest","User should be able to create build type",""
