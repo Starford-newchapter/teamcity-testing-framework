@@ -1,5 +1,6 @@
 package com.example.teamcity.api.models.build;
 
+import com.example.teamcity.api.annotations.Optional;
 import com.example.teamcity.api.annotations.Parameterizable;
 import com.example.teamcity.api.annotations.Random;
 import com.example.teamcity.api.models.BaseModel;
@@ -21,5 +22,6 @@ public class BuildType extends BaseModel {
     @Random
     private String name;
     private Project project;
+    @Optional
     private Steps steps;
 }

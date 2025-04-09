@@ -1,19 +1,32 @@
 package com.example.teamcity.api;
 
+import com.example.teamcity.api.enums.BuildState;
+import com.example.teamcity.api.enums.BuildStatus;
 import com.example.teamcity.api.enums.Roles;
 import com.example.teamcity.api.enums.Scope;
+import com.example.teamcity.api.models.build.Build;
 import com.example.teamcity.api.models.build.BuildType;
 import com.example.teamcity.api.models.build.Project;
+import com.example.teamcity.api.models.build.Property;
+import com.example.teamcity.api.models.build.Steps;
 import com.example.teamcity.api.models.user.Role;
 import com.example.teamcity.api.requests.CheckedRequests;
 import com.example.teamcity.api.requests.UncheckedRequests;
+import com.example.teamcity.api.requests.checked.CheckedBase;
 import com.example.teamcity.api.requests.unchecked.UncheckedBase;
 import com.example.teamcity.api.spec.Specifications;
 import com.example.teamcity.api.spec.ValidationResponseSpecifications;
+import io.qameta.allure.Step;
+import org.awaitility.Awaitility;
 import org.testng.annotations.Test;
 
+import java.time.Duration;
 import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
+import static com.example.teamcity.api.enums.Endpoint.BUILDS;
+import static com.example.teamcity.api.enums.Endpoint.BUILD_QUEUE;
 import static com.example.teamcity.api.enums.Endpoint.BUILD_TYPES;
 import static com.example.teamcity.api.enums.Endpoint.PROJECTS;
 import static com.example.teamcity.api.enums.Endpoint.USERS;
@@ -115,5 +128,54 @@ public class BuildTypeTest extends BaseApiTest {
                     .then().spec(ValidationResponseSpecifications
                             .checkUserCannotCreateBuildWithOtherProject(testData.getProject().getId()));
         });
+    }
+
+  /*//TODO Включить когда настроится агент в пайпалйне
+    @Test(description = "User should be able to run build  with step",enabled = false, groups = {"Positive", "CRUD"})
+    public void userCreatesAndRunBuildTypeWithStepTest() {
+        step("Create project", () -> {
+            superUserCheckedRequest.getRequest(USERS).create(testData.getUser());
+        });
+
+        step("Create project", () -> {
+            superUserCheckedRequest.getRequest(PROJECTS).create(testData.getProject());
+        });
+
+        var buildType = testData.getBuildType();
+        buildType.setSteps(generate(Steps.class, List.of(
+                generate(Property.class, "script.content", "echo 'Hello World!'"),
+                generate(Property.class, "use.custom.script", "true"))));
+
+        step("Create build with step CommandLine", () -> {
+            superUserCheckedRequest.getRequest(BUILD_TYPES).create(buildType);
+        });
+
+        var userCheckRequests = new CheckedBase<>(Specifications.authorizedSpec(testData.getUser()), BUILD_QUEUE);
+
+
+        var createdBuildRun = (Build) userCheckRequests.create(Build.builder()
+                .buildType(buildType)
+                .build());
+
+        softAssert.assertEquals(createdBuildRun.getState(), BuildState.QUEUED.getState());
+
+        var buildResult = waitUntilBuildIsFinished(createdBuildRun);
+        softAssert.assertEquals(buildResult.getStatus(), BuildStatus.SUCCESS.name());
+        softAssert.assertEquals(buildResult.getBuildType().getId(), buildType.getId());
+
+    }*/
+
+    @Step("Wait until build is finished")
+    private Build waitUntilBuildIsFinished(Build build) {
+        var atomicBuild = new AtomicReference<>(build);
+        var checkedBuildRequest = new CheckedBase<>(Specifications.authorizedSpec(testData.getUser()), BUILDS);
+        Awaitility.await()
+                .atMost(Duration.ofSeconds(15))
+                .pollInterval(Duration.ofSeconds(3))
+                .until(() -> {
+                    atomicBuild.set((Build) checkedBuildRequest.read("id:" + atomicBuild.get().getId()));
+                    return BuildState.FINISHED.getState().equals(atomicBuild.get().getState());
+                });
+        return atomicBuild.get();
     }
 }
