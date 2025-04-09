@@ -130,7 +130,7 @@ public class BuildTypeTest extends BaseApiTest {
         });
     }
 
-  //TODO Включить когда настроится агент в пайпалйне
+  /*//TODO Включить когда настроится агент в пайпалйне
     @Test(description = "User should be able to run build  with step",enabled = false, groups = {"Positive", "CRUD"})
     public void userCreatesAndRunBuildTypeWithStepTest() {
         step("Create project", () -> {
@@ -163,7 +163,7 @@ public class BuildTypeTest extends BaseApiTest {
         softAssert.assertEquals(buildResult.getStatus(), BuildStatus.SUCCESS.name());
         softAssert.assertEquals(buildResult.getBuildType().getId(), buildType.getId());
 
-    }
+    }*/
 
     @Step("Wait until build is finished")
     private Build waitUntilBuildIsFinished(Build build) {
