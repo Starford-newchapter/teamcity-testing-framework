@@ -1,6 +1,5 @@
 package com.example.teamcity.ui;
 
-import com.codeborne.selenide.Condition;
 import com.example.teamcity.api.models.build.Project;
 import com.example.teamcity.ui.pages.ProjectsPage;
 import org.testng.annotations.Test;
@@ -16,10 +15,13 @@ public class SearchProjectTest extends BaseUiTest {
         loginAs(testData.getUser());
 
         //Взаимодействие с UI
+        var foundedProjects = ProjectsPage.open()
+                .searchProject(testData.getProject().getName())
+                .getProjectsAndBuilds().stream()
+                .anyMatch(project -> project.getName().text().equals(testData.getProject().getName()));
 
-        ProjectsPage.open()
-                .selectProject(testData.getProject().getName())
-                .title.shouldHave(Condition.exactText(testData.getProject().getName()));
+        softAssert.assertTrue(foundedProjects);
+
     }
 
 }

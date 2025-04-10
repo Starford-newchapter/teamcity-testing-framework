@@ -13,7 +13,6 @@ import java.util.List;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
-import static com.codeborne.selenide.Selenide.page;
 
 public class ProjectsPage extends BasePage {
     private static final String PROJECTS_URL = "/favorite/projects";
@@ -43,21 +42,14 @@ public class ProjectsPage extends BasePage {
     }
 
     @Step("Получение всех проектов и билдов")
-    private List<ProjectAndBuildElement> getProjectsAndBuilds() {
+    public List<ProjectAndBuildElement> getProjectsAndBuilds() {
         return generatePageElements(projectsAndBuildsElements, ProjectAndBuildElement::new);
     }
 
 
-    @Step("Поиск и выбор проекта с названием {projectName}")
-    public ProjectPage selectProject(String projectName) {
+    @Step("Поиск проекта с названием {projectName}")
+    public ProjectsPage searchProject(String projectName) {
         searchProjectInput.val(projectName);
-        getProjectsAndBuilds().stream()
-                .filter(project -> project.getName().getText().contains(projectName))
-                .findFirst()
-                .ifPresent(project -> project.getName().click());
-
-        return page(ProjectPage.class);
+        return this;
     }
-
-
 }
