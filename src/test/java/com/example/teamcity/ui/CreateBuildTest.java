@@ -9,12 +9,9 @@ import com.example.teamcity.ui.enums.ErrorMessage;
 import com.example.teamcity.ui.pages.admin.CreateBuildPage;
 import com.example.teamcity.ui.pages.build.BuildConfigurationPage;
 import com.example.teamcity.ui.pages.build.BuildPage;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.RandomUtils;
 import org.testng.annotations.Test;
 
 import java.util.List;
-import java.util.Random;
 
 import static com.example.teamcity.api.enums.Endpoint.BUILD_TYPES;
 import static com.example.teamcity.api.enums.Endpoint.PROJECTS;
@@ -38,7 +35,7 @@ public class CreateBuildTest extends BaseUiTest {
 
         // проверка состояния API
         //корректность отправки данных с UI на API
-        var createdBuild = superUserCheckedRequest.<BuildType>getRequest(BUILD_TYPES).read("name:" + testData.getBuildType().getName());
+        var createdBuild = superUserCheckedRequest.<BuildType>getRequest(BUILD_TYPES).read("/name:" + testData.getBuildType().getName());
         softAssert.assertNotNull(createdBuild);
 
         //проверка состояния UIc

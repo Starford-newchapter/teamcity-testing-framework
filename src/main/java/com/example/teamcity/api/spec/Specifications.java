@@ -34,11 +34,11 @@ public class Specifications {
     }
 
 
-    private static RequestSpecBuilder requestSpecBuilder() {
+    private static RequestSpecBuilder requestSpecBuilder(ContentType contentType) {
         RequestSpecBuilder requestSpecBuilder = new RequestSpecBuilder();
         requestSpecBuilder.setBaseUri("http://" + Config.getProperty("host"));
-        requestSpecBuilder.setContentType(ContentType.JSON);
-        requestSpecBuilder.setAccept(ContentType.JSON);
+        requestSpecBuilder.setContentType(contentType);
+        requestSpecBuilder.setAccept(contentType);
         requestSpecBuilder.addFilters(List.of(new RequestLoggingFilter(), new ResponseLoggingFilter()));
         requestSpecBuilder.addFilter(new SwaggerCoverageRestAssured(
                 new FileSystemOutputWriter(
@@ -49,29 +49,30 @@ public class Specifications {
         return requestSpecBuilder;
     }
 
-    public static RequestSpecification superUserAuthSpec() {
-        var requestBuilder = requestSpecBuilder();
+
+    public static RequestSpecification superUserAuthSpec(ContentType contentType) {
+        var requestBuilder = requestSpecBuilder(contentType);
         requestBuilder.setBaseUri("http://%s:%s@%s/httpAuth".formatted("", Config.getProperty("superUserToken"), Config.getProperty("host")));
         return requestBuilder.build();
     }
 
-    public static RequestSpecification unauthorizedSpec() {
-        return requestSpecBuilder().build();
+    public static RequestSpecification unauthorizedSpec(ContentType contentType) {
+        return requestSpecBuilder(contentType).build();
 
     }
 
-    public static RequestSpecification authorizedSpec(User user) {
+    public static RequestSpecification authorizedSpec(User user, ContentType contentType) {
         BasicAuthScheme basicAuthScheme = new BasicAuthScheme();
         basicAuthScheme.setUserName(user.getUsername());
         basicAuthScheme.setPassword(user.getPassword());
 
-        return requestSpecBuilder()
+        return requestSpecBuilder(contentType)
                 .setAuth(basicAuthScheme)
                 .build();
     }
 
-    public RequestSpecification mockSpec() {
-        return requestSpecBuilder()
+    public RequestSpecification mockSpec(ContentType contentType) {
+        return requestSpecBuilder(contentType)
                 .setBaseUri("http://localhost:8086")
                 .build();
     }

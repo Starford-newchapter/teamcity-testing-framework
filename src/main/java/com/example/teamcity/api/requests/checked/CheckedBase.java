@@ -47,6 +47,13 @@ public final class CheckedBase<T extends BaseModel> extends Request implements C
                 .extract().as(endpoint.getModelClass());
     }
 
+    public String update(String id, String body) {
+        return uncheckedBase
+                .update(id, body)
+                .then().assertThat().statusCode(HttpStatus.SC_OK)
+                .extract().body().asString();
+    }
+
     @Override
     public Object delete(String id) {
         return uncheckedBase
@@ -61,4 +68,6 @@ public final class CheckedBase<T extends BaseModel> extends Request implements C
                 .search(locator)
                 .then().assertThat().statusCode(HttpStatus.SC_OK);
     }
+
+
 }

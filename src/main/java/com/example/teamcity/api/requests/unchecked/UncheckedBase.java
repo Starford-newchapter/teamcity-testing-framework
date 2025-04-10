@@ -33,7 +33,7 @@ public class UncheckedBase extends Request implements CrudInterface, SearchInter
         return RestAssured
                 .given()
                 .spec(specification)
-                .get(endpoint.getUrl() + "/" + locator);
+                .get(endpoint.getUrl() + locator);
     }
 
     @Override
@@ -45,6 +45,17 @@ public class UncheckedBase extends Request implements CrudInterface, SearchInter
                 .body(model)
                 .put(endpoint.getUrl() + "/" + locator);
     }
+
+
+    @Step("Отправка запроса на обновление данных сущности")
+    public Response update(String locator, String body) {
+        return RestAssured
+                .given()
+                .spec(specification)
+                .body(body)
+                .put(endpoint.getUrl() + locator);
+    }
+
 
     @Override
     @Step("Отправка запроса на удаление  сущности")

@@ -24,7 +24,7 @@ public class CreateProjectTest extends BaseUiTest {
 
         // проверка состояния API
         //корректность отправки данных с UI на API
-        var createdProject = superUserCheckedRequest.<Project>getRequest(Endpoint.PROJECTS).read("name:" + testData.getProject().getName());
+        var createdProject = superUserCheckedRequest.<Project>getRequest(Endpoint.PROJECTS).read("/name:" + testData.getProject().getName());
         softAssert.assertNotNull(createdProject);
 
         //проверка состояния UI

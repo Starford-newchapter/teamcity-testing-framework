@@ -6,13 +6,14 @@ import com.example.teamcity.api.models.auth.AuthModules;
 import com.example.teamcity.api.models.auth.ServerAuthSettings;
 import com.example.teamcity.api.requests.ServerAuthRequest;
 import com.example.teamcity.api.spec.Specifications;
+import io.restassured.http.ContentType;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 
 import static com.example.teamcity.api.generators.TestDataGenerator.generate;
 
 public class BaseApiTest extends BaseTest {
-    private final ServerAuthRequest serverAuthRequest = new ServerAuthRequest(Specifications.superUserAuthSpec());
+    private final ServerAuthRequest serverAuthRequest = new ServerAuthRequest(Specifications.superUserAuthSpec(ContentType.JSON));
     private AuthModules authModules;
     private boolean perProjectPermissions;
 
