@@ -20,7 +20,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post;
 @Feature("Start build")
 public class StartBuildTest extends BaseApiTest {
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void setupWireMockServer() {
         var fakeBuild = Build.builder()
                 .state("finished")
@@ -30,8 +30,7 @@ public class StartBuildTest extends BaseApiTest {
         WireMock.setupServer(post(BUILD_QUEUE.getUrl()), HttpStatus.SC_OK, fakeBuild);
     }
 
-
-    @Test(description = "User should be able to start build (with WireMock)")
+    @Test(description = "User should be able to start build (with WireMock)", groups = {"Regression"}, alwaysRun = true)
     public void userStartsBuildWithWireMockTest() {
         var checkedBuildQueueRequest = new CheckedBase<>(Specifications.getSpec()
                 .mockSpec(ContentType.JSON), BUILD_QUEUE);
