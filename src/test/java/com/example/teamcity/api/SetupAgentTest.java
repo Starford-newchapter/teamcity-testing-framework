@@ -30,8 +30,6 @@ public class SetupAgentTest extends BaseApiTest {
         });
     }
 
-
-
     @Step("Ожидаем появление неавторизованного агента")
     private Agent getUnauthorizedAgent() {
         var agents = new AtomicReference<List<Agent>>();
