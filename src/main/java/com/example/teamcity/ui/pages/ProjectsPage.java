@@ -46,7 +46,6 @@ public class ProjectsPage extends BasePage {
         return generatePageElements(projectsAndBuildsElements, ProjectAndBuildElement::new);
     }
 
-
     @Step("Поиск проекта с названием {projectName}")
     public ProjectsPage searchProject(String projectName) {
         searchProjectInput.val(projectName);
