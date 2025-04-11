@@ -31,6 +31,7 @@ public class StartBuildTest extends BaseApiTest {
     }
 
 
+
     @Test(description = "User should be able to start build (with WireMock)", groups = {"Regression"}, alwaysRun = true)
     public void userStartsBuildWithWireMockTest() {
         var checkedBuildQueueRequest = new CheckedBase<>(Specifications.getSpec()
