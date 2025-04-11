@@ -21,6 +21,7 @@ public class SearchProjectTest extends BaseUiTest {
                     .getProjectsAndBuilds().stream()
                     .anyMatch(project -> project.getName().text().contains(testData.getProject().getName()));
 
+
         }
 
     }
