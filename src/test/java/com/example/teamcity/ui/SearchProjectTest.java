@@ -15,12 +15,14 @@ public class SearchProjectTest extends BaseUiTest {
         loginAs(testData.getUser());
 
         //Взаимодействие с UI
-        var foundedProjects = ProjectsPage.open()
+        var foundedProject = ProjectsPage.open()
                 .searchProject(testData.getProject().getName())
                 .getProjectsAndBuilds().stream()
-                .anyMatch(project -> project.getName().text().equals(testData.getProject().getName()));
+                .filter(project -> project.getName().text().equals(testData.getProject().getName()))
+                .findAny()
+                .map(project -> project.getName().text());
 
-        softAssert.assertTrue(foundedProjects);
+        softAssert.assertEquals(foundedProject,testData.getProject().getName());
 
     }
 
