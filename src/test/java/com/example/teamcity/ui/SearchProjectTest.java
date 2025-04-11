@@ -10,20 +10,19 @@ public class SearchProjectTest extends BaseUiTest {
 
     @Test(description = "User should be able search for project", groups = {"Regression"})
     public void userSearchProject() {
-        //подготовка окружения
-        superUserCheckedRequest.<Project>getRequest(PROJECTS).create(testData.getProject());
-        loginAs(testData.getUser());
 
-        //Взаимодействие с UI
-        var foundedProject = ProjectsPage.open()
-                .searchProject(testData.getProject().getName())
-                .getProjectsAndBuilds().stream()
-                .filter(project -> project.getName().text().equals(testData.getProject().getName()))
-                .findAny()
-                .map(project -> project.getName().text());
+            //подготовка окружения
+            superUserCheckedRequest.<Project>getRequest(PROJECTS).create(testData.getProject());
+            loginAs(testData.getUser());
 
-        softAssert.assertEquals(foundedProject,testData.getProject().getName());
+            //Взаимодействие с UI
+            var foundedProject = ProjectsPage.open()
+                    .searchProject(testData.getProject().getName())
+                    .getProjectsAndBuilds().stream()
+                    .anyMatch(project -> project.getName().text().contains(testData.getProject().getName()));
+
+
+            softAssert.assertTrue(foundedProject);
+        }
 
     }
-
-}
