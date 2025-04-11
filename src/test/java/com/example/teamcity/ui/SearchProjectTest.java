@@ -15,7 +15,6 @@ public class SearchProjectTest extends BaseUiTest {
             superUserCheckedRequest.<Project>getRequest(PROJECTS).create(testData.getProject());
             loginAs(testData.getUser());
 
-
             //Взаимодействие с UI
             var foundedProject = ProjectsPage.open()
                     .searchProject(testData.getProject().getName())
