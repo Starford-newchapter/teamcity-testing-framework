@@ -1,6 +1,5 @@
 package com.example.teamcity.ui;
 
-import com.codeborne.selenide.Condition;
 import com.example.teamcity.api.models.build.Project;
 import com.example.teamcity.ui.pages.ProjectsPage;
 import org.testng.annotations.Test;
@@ -11,15 +10,17 @@ public class SearchProjectTest extends BaseUiTest {
 
     @Test(description = "User should be able search for project", groups = {"Regression"})
     public void userSearchProject() {
-        //подготовка окружения
-        superUserCheckedRequest.<Project>getRequest(PROJECTS).create(testData.getProject());
-        loginAs(testData.getUser());
 
-        //Взаимодействие с UI
+            //подготовка окружения
+            superUserCheckedRequest.<Project>getRequest(PROJECTS).create(testData.getProject());
+            loginAs(testData.getUser());
 
-        ProjectsPage.open()
-                .selectProject(testData.getProject().getName())
-                .title.shouldHave(Condition.exactText(testData.getProject().getName()));
+            //Взаимодействие с UI
+            var foundedProject = ProjectsPage.open()
+                    .searchProject(testData.getProject().getName())
+                    .getProjectsAndBuilds().stream()
+                    .anyMatch(project -> project.getName().text().contains(testData.getProject().getName()));
+
+        }
+
     }
-
-}

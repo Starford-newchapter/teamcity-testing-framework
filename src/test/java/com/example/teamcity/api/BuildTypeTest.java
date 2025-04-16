@@ -131,6 +131,7 @@ public class BuildTypeTest extends BaseApiTest {
         });
     }
 
+
     @Test(description = "User should be able to run build  with step", groups = {"Positive", "CRUD"})
     public void userCreatesAndRunBuildTypeWithStepTest() {
         step("Create project", () -> {
